@@ -546,3 +546,26 @@ body::before {
   .stat-card { min-width: 90px; padding: .75rem 1rem; }
   .stat-n    { font-size: 1.5rem; }
 }
+
+/* ── Tabla de errores ───────────────────────── */
+.label-errors::before { background: var(--coral); }
+
+.err-type-badge {
+  font-family: var(--f-code);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+}
+
+.err-ok {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: 1rem 1.25rem;
+  background: rgba(52,211,153,.06);
+  border: 1px solid rgba(52,211,153,.2);
+  border-radius: var(--r);
+  font-family: var(--f-code);
+  font-size: .82rem;
+  color: var(--emerald);
+}

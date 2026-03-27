@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
 
@@ -24,7 +24,7 @@
       <span class="word-2"> —</span>
       <span class="word-3"> Analizador Léxico</span>
     </h1>
-    <p class="hdr-sub">// tokenizador &nbsp;·&nbsp; tabla de símbolos &nbsp;·&nbsp; detección de errores</p>
+    <p class="hdr-sub">// expresiones regulares &nbsp;·&nbsp; tabla de errores &nbsp;·&nbsp; tabla de símbolos</p>
   </header>
 
   <!-- ══ EDITOR ═══════════════════════════════════════════ -->
@@ -77,6 +77,22 @@
 
   <div class="divider"></div>
 
+  <!-- ══ TABLA DE ERRORES ══════════════════════════════════ -->
+  <div class="results-section">
+    <div class="section-label label-errors">
+      Tabla de Errores
+      <span id="errCount" class="section-count"></span>
+    </div>
+    <div id="errWrap">
+      <div class="empty">
+        <span class="empty-icon">⚠</span>
+        <span>Los errores aparecerán aquí...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
   <!-- ══ TABLA DE SÍMBOLOS ═════════════════════════════════ -->
   <div class="results-section">
     <div class="section-label label-symbols">
@@ -101,6 +117,10 @@
 
 </div><!-- /wrap -->
 
-<script src="../js/app.js"></script>
+  <!-- Orden de carga importante: constants → lexer → render → app -->
+  <script src="/js/constants.js"></script>
+  <script src="/js/lexer.js"></script>
+  <script src="/js/render.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
