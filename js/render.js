@@ -1,4 +1,4 @@
-import { TYPE, ERR_COLOR } from "./constants.js";
+"use strict";
 
 const $ = id => document.getElementById(id);
 
@@ -40,7 +40,7 @@ function tdClass(type) {
   return map[type] ?? "";
 }
 
-export function renderTokens(tokens) {
+function renderTokens(tokens) {
   const grid       = $("tokensGrid");
   const countBadge = $("tokCount");
   countBadge.textContent = tokens.length ? `${tokens.length} tokens` : "";
@@ -65,7 +65,7 @@ export function renderTokens(tokens) {
   grid.innerHTML = rows.join("");
 }
 
-export function renderErrorTable(errTable) {
+function renderErrorTable(errTable) {
   const wrap       = $("errWrap");
   const countBadge = $("errCount");
   countBadge.textContent = errTable.length ? `${errTable.length} errores` : "";
@@ -91,7 +91,7 @@ export function renderErrorTable(errTable) {
     </div>`;
 }
 
-export function renderSymbols(symbols, tokens, errors) {
+function renderSymbols(symbols, tokens, errors) {
   const wrap       = $("symWrap");
   const countBadge = $("symCount");
   const statsWrap  = $("statsWrap");
@@ -145,7 +145,7 @@ function _renderSymbolsTable(symbols, container) {
     </div>`;
 }
 
-export function clearUI() {
+function clearUI() {
   $("codeInput").value        = "";
   $("tokensGrid").innerHTML   = emptyState("◎", "Esperando código fuente...");
   $("errWrap").innerHTML      = emptyState("⚠", "Los errores aparecerán aquí...");

@@ -1,6 +1,6 @@
 "use strict";
 
-export const TYPE = {
+const TYPE = {
   KW:     "Palabra reservada",
   ID:     "Identificador",
   NUM:    "Número entero",
@@ -11,7 +11,7 @@ export const TYPE = {
   ERR:    "Error",
 };
 
-export const CAT = {
+const CAT = {
   [TYPE.KW]:     "Reservada",
   [TYPE.ID]:     "Identificador",
   [TYPE.NUM]:    "Constante",
@@ -22,14 +22,14 @@ export const CAT = {
   [TYPE.ERR]:    "Error",
 };
 
-export const ERR_TYPES = {
+const ERR_TYPES = {
   ID_TOO_LONG:   "Identificador muy largo",
   NUM_OUT_RANGE: "Número fuera de rango",
   INVALID_TOKEN: "Token inválido",
   UNKNOWN_CHAR:  "Carácter desconocido",
 };
 
-export const ERR_COLOR = {
+const ERR_COLOR = {
   [ERR_TYPES.ID_TOO_LONG]:   "var(--violet)",
   [ERR_TYPES.NUM_OUT_RANGE]: "var(--amber)",
   [ERR_TYPES.INVALID_TOKEN]: "var(--fuchsia)",
@@ -53,9 +53,9 @@ function buildKeywords() {
   return kw;
 }
 
-export const KEYWORDS = buildKeywords();
+const KEYWORDS = buildKeywords();
 
-export const REGEX_RULES = [
+const REGEX_RULES = [
   { regex: /^\/\/[^\n]*/,                    type: "SKIP"      },
   { regex: /^\/\*[\s\S]*?\*\//,              type: "SKIP"      },
   { regex: /^#[^\n]*/,                       type: "SKIP"      },

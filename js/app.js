@@ -1,5 +1,4 @@
-import { Lexer }                                        from "./lexer.js";
-import { renderTokens, renderErrorTable, renderSymbols, clearUI } from "./render.js";
+"use strict";
 
 const SAMPLES = [
   `// Muestra 1: pseudocódigo completo

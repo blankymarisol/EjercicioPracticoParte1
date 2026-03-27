@@ -1,6 +1,6 @@
-import { TYPE, CAT, ERR_TYPES, KEYWORDS, REGEX_RULES } from "./constants.js";
+"use strict";
 
-export class Lexer {
+class Lexer {
 
   constructor(sourceCode) {
     this.src    = sourceCode;
