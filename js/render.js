@@ -1,40 +1,17 @@
-"use strict";
+import { TYPE, ERR_COLOR } from "./constants.js";
 
-// ═══════════════════════════════════════════════════════════
-// render.js
-// Funciones de renderizado: convierten los datos del lexer
-// en HTML y los insertan en el DOM.
-// No contiene lógica de análisis léxico.
-//
-// Dependencias: constants.js (debe cargarse antes)
-// ═══════════════════════════════════════════════════════════
-
-
-// ── Utilidades generales ────────────────────────────────────
-
-/** Obtiene un elemento del DOM por id */
 const $ = id => document.getElementById(id);
 
-/** Escapa caracteres HTML para evitar XSS */
 const esc = str =>
   String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-/** Retorna el HTML de un estado vacío (sin datos aún) */
 function emptyState(icon, message) {
-  return `
-    <div class="empty">
-      <span class="empty-icon">${icon}</span>
-      <span>${message}</span>
-    </div>`;
+  return `<div class="empty"><span class="empty-icon">${icon}</span><span>${message}</span></div>`;
 }
 
-
-// ── Clases CSS por tipo de token ────────────────────────────
-
-/** Clase CSS para las pills (etiquetas de tipo de token) */
 function pillClass(type) {
   const map = {
     [TYPE.KW]:     "pill-kw",
@@ -49,7 +26,6 @@ function pillClass(type) {
   return map[type] ?? "pill-id";
 }
 
-/** Clase CSS para celdas de la tabla de símbolos */
 function tdClass(type) {
   const map = {
     [TYPE.KW]:     "td-kw",
@@ -64,28 +40,19 @@ function tdClass(type) {
   return map[type] ?? "";
 }
 
-
-// ═══════════════════════════════════════════════════════════
-// RENDER: Lista de tokens
-// ═══════════════════════════════════════════════════════════
-
-function renderTokens(tokens) {
-  const grid = $("tokensGrid");
+export function renderTokens(tokens) {
+  const grid       = $("tokensGrid");
   const countBadge = $("tokCount");
-
   countBadge.textContent = tokens.length ? `${tokens.length} tokens` : "";
-
   if (!tokens.length) {
     grid.innerHTML = emptyState("◎", "Sin tokens detectados");
     return;
   }
-
   const rows = tokens.map((token, index) => {
     const animDelay = Math.min(index * 10, 600);
     const errorRow  = token.extra
       ? `<div class="tok-err-msg">⚠ ${esc(token.extra)}</div>`
       : "";
-
     return `
       <div class="tok-card" style="animation-delay:${animDelay}ms">
         <span class="tok-index">${token.id}</span>
@@ -95,108 +62,68 @@ function renderTokens(tokens) {
         ${errorRow}
       </div>`;
   });
-
   grid.innerHTML = rows.join("");
 }
 
-
-// ═══════════════════════════════════════════════════════════
-// RENDER: Tabla de errores
-// ═══════════════════════════════════════════════════════════
-
-function renderErrorTable(errTable) {
+export function renderErrorTable(errTable) {
   const wrap       = $("errWrap");
   const countBadge = $("errCount");
-
   countBadge.textContent = errTable.length ? `${errTable.length} errores` : "";
-
-  // Sin errores: mostrar mensaje de éxito
   if (!errTable.length) {
-    wrap.innerHTML = `
-      <div class="err-ok">
-        <span>✓</span> Sin errores léxicos detectados
-      </div>`;
+    wrap.innerHTML = `<div class="err-ok"><span>✓</span> Sin errores léxicos detectados</div>`;
     return;
   }
-
   const rows = errTable.map(err => `
     <tr>
       <td>${err.id}</td>
       <td class="td-err" style="font-weight:500">${esc(err.lexema)}</td>
-      <td>
-        <span class="err-type-badge" style="color:${ERR_COLOR[err.errType] ?? "var(--coral)"}">
-          ${esc(err.errType)}
-        </span>
-      </td>
-      <td style="color:var(--tx-soft); font-size:.75rem">${esc(err.detail)}</td>
+      <td><span class="err-type-badge" style="color:${ERR_COLOR[err.errType] ?? "var(--coral)"}">
+        ${esc(err.errType)}</span></td>
+      <td style="color:var(--tx-soft);font-size:.75rem">${esc(err.detail)}</td>
       <td style="color:var(--tx-muted)">Línea ${err.line}, Col ${err.col}</td>
     </tr>`);
-
   wrap.innerHTML = `
     <div class="sym-wrap">
       <table class="sym-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Lexema</th>
-            <th>Tipo de error</th>
-            <th>Descripción</th>
-            <th>Posición</th>
-          </tr>
-        </thead>
+        <thead><tr><th>#</th><th>Lexema</th><th>Tipo de error</th><th>Descripción</th><th>Posición</th></tr></thead>
         <tbody>${rows.join("")}</tbody>
       </table>
     </div>`;
 }
 
-
-// ═══════════════════════════════════════════════════════════
-// RENDER: Tabla de símbolos + estadísticas
-// ═══════════════════════════════════════════════════════════
-
-function renderSymbols(symbols, tokens, errors) {
+export function renderSymbols(symbols, tokens, errors) {
   const wrap       = $("symWrap");
   const countBadge = $("symCount");
   const statsWrap  = $("statsWrap");
-
   countBadge.textContent = symbols.length ? `${symbols.length} entradas` : "";
-
   if (!symbols.length) {
-    wrap.innerHTML    = emptyState("⊡", "La tabla se generará al analizar...");
+    wrap.innerHTML      = emptyState("⊡", "La tabla se generará al analizar...");
     statsWrap.innerHTML = "";
     return;
   }
-
   _renderStats(tokens, errors, statsWrap);
   _renderSymbolsTable(symbols, wrap);
 }
 
-
-/** Renderiza las tarjetas de estadísticas */
 function _renderStats(tokens, errors, container) {
   const count = type => tokens.filter(t => t.type === type).length;
-
   const stats = [
-    { val: tokens.length,                                            lbl: "Total",      cls: "stat-total", color: "var(--indigo)"  },
-    { val: count(TYPE.KW),                                           lbl: "Reservadas", cls: "stat-kw",    color: "var(--t-kw)"    },
-    { val: count(TYPE.ID),                                           lbl: "Identif.",   cls: "stat-id",    color: "var(--t-id)"    },
-    { val: count(TYPE.NUM),                                          lbl: "Números",    cls: "stat-num",   color: "var(--t-num)"   },
-    { val: count(TYPE.STR),                                          lbl: "Cadenas",    cls: "stat-str",   color: "var(--t-str)"   },
-    { val: count(TYPE.ARITH) + count(TYPE.ASSIGN) + count(TYPE.REL),lbl: "Operadores", cls: "stat-ops",   color: "var(--t-arith)" },
-    { val: errors.length,                                            lbl: "Errores",    cls: "stat-err",   color: "var(--t-err)"   },
+    { val: tokens.length,                                             lbl: "Total",      cls: "stat-total", color: "var(--indigo)"  },
+    { val: count(TYPE.KW),                                            lbl: "Reservadas", cls: "stat-kw",    color: "var(--t-kw)"    },
+    { val: count(TYPE.ID),                                            lbl: "Identif.",   cls: "stat-id",    color: "var(--t-id)"    },
+    { val: count(TYPE.NUM),                                           lbl: "Números",    cls: "stat-num",   color: "var(--t-num)"   },
+    { val: count(TYPE.STR),                                           lbl: "Cadenas",    cls: "stat-str",   color: "var(--t-str)"   },
+    { val: count(TYPE.ARITH) + count(TYPE.ASSIGN) + count(TYPE.REL), lbl: "Operadores", cls: "stat-ops",   color: "var(--t-arith)" },
+    { val: errors.length,                                             lbl: "Errores",    cls: "stat-err",   color: "var(--t-err)"   },
   ];
-
   const chips = stats.map(s => `
     <div class="stat-card ${s.cls}">
       <div class="stat-n" style="color:${s.color}">${s.val}</div>
       <div class="stat-lbl">${s.lbl}</div>
     </div>`);
-
   container.innerHTML = `<div class="stats-row">${chips.join("")}</div>`;
 }
 
-
-/** Renderiza la tabla de símbolos */
 function _renderSymbolsTable(symbols, container) {
   const rows = symbols
     .sort((a, b) => a.id - b.id)
@@ -209,31 +136,16 @@ function _renderSymbolsTable(symbols, container) {
         <td style="color:var(--tx-soft)">${sym.line}</td>
         <td><span class="occ">${sym.occ}</span></td>
       </tr>`);
-
   container.innerHTML = `
     <div class="sym-wrap">
       <table class="sym-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Lexema</th>
-            <th>Tipo de token</th>
-            <th>Categoría</th>
-            <th>1ª línea</th>
-            <th>Ocurrencias</th>
-          </tr>
-        </thead>
+        <thead><tr><th>#</th><th>Lexema</th><th>Tipo de token</th><th>Categoría</th><th>1ª línea</th><th>Ocurrencias</th></tr></thead>
         <tbody>${rows.join("")}</tbody>
       </table>
     </div>`;
 }
 
-
-// ═══════════════════════════════════════════════════════════
-// RENDER: Limpiar toda la UI
-// ═══════════════════════════════════════════════════════════
-
-function clearUI() {
+export function clearUI() {
   $("codeInput").value        = "";
   $("tokensGrid").innerHTML   = emptyState("◎", "Esperando código fuente...");
   $("errWrap").innerHTML      = emptyState("⚠", "Los errores aparecerán aquí...");

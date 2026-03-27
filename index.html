@@ -7,13 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
 <div class="wrap">
 
-  <!-- ══ HEADER ══════════════════════════════════════════ -->
   <header class="hdr">
     <div class="hdr-tag">
       <span class="hdr-tag-dot"></span>
@@ -24,15 +23,14 @@
       <span class="word-2"> —</span>
       <span class="word-3"> Analizador Léxico</span>
     </h1>
-    <p class="hdr-sub">// expresiones regulares &nbsp;·&nbsp; tabla de errores &nbsp;·&nbsp; tabla de símbolos</p>
+    <p class="hdr-sub">// tokenizador &nbsp;·&nbsp; tabla de símbolos &nbsp;·&nbsp; detección de errores</p>
   </header>
 
-  <!-- ══ EDITOR ═══════════════════════════════════════════ -->
   <div class="action-bar">
     <span class="action-bar-title">Código fuente</span>
     <button class="btn btn-sample" onclick="loadSample(1)">Muestra 1</button>
     <button class="btn btn-sample" onclick="loadSample(2)">Muestra 2</button>
-    <button class="btn btn-run"   onclick="analyze()">▶ &nbsp;Analizar</button>
+    <button class="btn btn-run" onclick="analyze()">▶ Analizar</button>
     <button class="btn btn-clear" onclick="clearAll()">✕ Limpiar</button>
   </div>
 
@@ -43,9 +41,7 @@
         <div class="mac-dot" style="background:#febc2e;"></div>
         <div class="mac-dot" style="background:#28c840;"></div>
       </div>
-      <span style="font-family:var(--f-code);font-size:.72rem;color:var(--tx-muted);margin-left:.5rem;">
-        source.txt
-      </span>
+      <span style="font-family:var(--f-code);font-size:.72rem;color:var(--tx-muted);margin-left:.5rem;">source.txt</span>
       <span class="editor-lang">cualquier lenguaje</span>
     </div>
     <textarea
@@ -53,15 +49,10 @@
       class="code-area"
       spellcheck="false"
       placeholder="// Pega o escribe tu código fuente aquí...
-// El analizador reconoce: identificadores, números (0-100),
-// cadenas asdfg, operadores aritméticos, := asignación,
-// operadores relacionales y palabras reservadas.
-//
 // Ctrl + Enter para analizar rápidamente."
     ></textarea>
   </div>
 
-  <!-- ══ TOKENS ════════════════════════════════════════════ -->
   <div class="results-section">
     <div class="section-label label-tokens">
       Tokens detectados
@@ -77,7 +68,6 @@
 
   <div class="divider"></div>
 
-  <!-- ══ TABLA DE ERRORES ══════════════════════════════════ -->
   <div class="results-section">
     <div class="section-label label-errors">
       Tabla de Errores
@@ -93,7 +83,6 @@
 
   <div class="divider"></div>
 
-  <!-- ══ TABLA DE SÍMBOLOS ═════════════════════════════════ -->
   <div class="results-section">
     <div class="section-label label-symbols">
       Tabla de Símbolos
@@ -109,18 +98,13 @@
 
   <div class="divider"></div>
 
-  <!-- ══ ESTADÍSTICAS ══════════════════════════════════════ -->
   <div class="results-section">
     <div class="section-label label-stats">Estadísticas</div>
     <div id="statsWrap"></div>
   </div>
 
-</div><!-- /wrap -->
+</div>
 
-  <!-- Orden de carga importante: constants → lexer → render → app -->
-  <script src="/js/constants.js"></script>
-  <script src="/js/lexer.js"></script>
-  <script src="/js/render.js"></script>
-  <script src="/js/app.js"></script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
